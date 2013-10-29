@@ -13,7 +13,7 @@ class PriceBot(object):
         self.config = config
 
         # init logging
-        logging.basicConfig(filename=self.config.log_file, level=logging.INFO)
+        logging.basicConfig(filename=self.config['log_file'], level=logging.INFO)
 
         # init the trade db
         connect_string = ('mysql://%(trade_db_user)s:%(trade_db_password)s@'
@@ -21,7 +21,7 @@ class PriceBot(object):
         self.trade_db = sqlsoup.SQLSoup(connect_string)
 
         # init the scrolls client
-        self.scrolls = ScrollsSocketClient(self.config.username, self.config.password)
+        self.scrolls = ScrollsSocketClient(self.config['username'], self.config['password'])
 
         # subscribe to the FirstConnect event
         self.scrolls.subscribe('FirstConnect', self.connect)
@@ -32,7 +32,7 @@ class PriceBot(object):
     def connect(self, message):
         self.scrolls.send({'msg': 'JoinLobby'})
 
-        for room_name in self.config.join_rooms:
+        for room_name in self.config['join_rooms']:
             self.scrolls.send({'msg': 'RoomEnter', 'roomName': room_name})
 
         self.scrolls.subscribe('CardTypes', self.update_scroll_list)
