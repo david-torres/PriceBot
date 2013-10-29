@@ -15,9 +15,10 @@ class PriceParser(object):
     wts_regex = 'wts/wtt|wts[\s|\-|:]'
     wtb_regex = 'wtb/wtt|wtb[\s|\-|:]'
     ex_alnum_regex = '[^a-zA-Z0-9\s\-,\.]'
+    ex_num_regex = '[^0-9\.\,k]'
     each_regex = '\s+?ea(ch)?\s+?'
     multiples_regex = 'x?[0-9]+x?'
-    common_delimiters = [',', '//', '||', '-', '|']
+    common_delimiters = [',', '//', '||', '-', '|', '/']
 
     def __init__(self, scroll_list):
         """
@@ -123,7 +124,7 @@ class PriceParser(object):
                                 wtb = {
                                     'scroll_id': self.scroll_ids[scroll_name],
                                     'price': -1,
-                                    'type': 1,
+                                    'type': 2,
                                     'user': message['from'],
                                     'room': message['roomName']
                                 }
@@ -161,6 +162,7 @@ class PriceParser(object):
         """
         Multiple match for Scroll_Name XXXg
         """
+        # strip non alphanumeric chars
         ex_alnum = re.compile(self.ex_alnum_regex)
         message = ex_alnum.sub('', message.strip())
 
@@ -171,8 +173,10 @@ class PriceParser(object):
         """
         Multiple match for Scroll_Name
         """
+        # strip non alphanumeric chars
         ex_alnum = re.compile(self.ex_alnum_regex)
         message = ex_alnum.sub('', message.strip())
+
         pattern = re.compile(self.scroll_noprice_regex)
         return pattern.findall(message.strip())
 
@@ -180,9 +184,11 @@ class PriceParser(object):
         """
         Sanitize and perform a fuzzy match on the scroll name
         """
+        # rm each, ie. "Kinfolk Brave 100g ea"
         each_pattern = re.compile(self.each_regex, re.IGNORECASE)
         scroll_name = each_pattern.sub('', scroll_name)
 
+        # rm multiples, ie. "Kinfolk Brave 100g x2"
         multiples_pattern = re.compile(self.multiples_regex, re.IGNORECASE)
         scroll_name = multiples_pattern.sub('', scroll_name)
 
@@ -197,11 +203,13 @@ class PriceParser(object):
         """
         Sanitize the gold amount
         """
-        scroll_price = scroll_price.replace('g', '').replace('(', '').replace(')', '').replace(' ', '').strip()
+        # rm non numeric chars
+        ex_num = re.compile(self.ex_num_regex, re.IGNORECASE)
+        scroll_price = ex_num.sub('', scroll_price.strip())
 
         # check for 1.5k/1,5k style and sanitize
         if scroll_price.find('.') > -1 or scroll_price.find(',') > -1:
-            scroll_price = scroll_price.replace('.', '').strip()
+            scroll_price = scroll_price.replace('.', '').replace(',', '').strip()
 
             if scroll_price.lower().find('k') > -1:
                 scroll_price = scroll_price.lower().replace('k', '00')
