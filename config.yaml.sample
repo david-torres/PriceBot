@@ -1,5 +1,5 @@
 bot_name: Pricebot v0.1a
-email: user@example.com
+username: user@example.com
 password: password12345
 join_rooms:
   - trading-1
