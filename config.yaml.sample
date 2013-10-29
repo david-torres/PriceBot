@@ -1,0 +1,13 @@
+bot_name: Pricebot v0.1a
+email: user@example.com
+password: password12345
+join_rooms:
+  - trading-1
+  - trading-2
+  - trading-3
+trade_db_user: root
+trade_db_password:
+trade_db_host: 127.0.0.1
+trade_db_port: 3306
+trade_db_database: koenbps1_trade
+log_file: app.log
