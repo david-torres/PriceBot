@@ -9,6 +9,32 @@ Installation
 
     $ pip install -r requirements.txt
 
+Installed via pip
+==================
+
+Needed by the scrolls client to authenticate
+
+	requests==2.0.1
+
+Used to read the config file
+
+	PyYAML==3.10
+
+Used to create an easy to start/stop daemon process
+
+	zdaemon==4.0.0
+
+
+Used to do fuzzy matching to catch misspelled/abbreviated scroll names
+
+	fuzzywuzzy==0.2
+
+Used to connect to a db and insert some data using MySql
+
+	sqlsoup==0.9.0
+	MySQL-python==1.2.4
+
+
 
 Usage
 ======
