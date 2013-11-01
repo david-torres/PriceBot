@@ -9,5 +9,5 @@ trade_db_user: root
 trade_db_password:
 trade_db_host: 127.0.0.1
 trade_db_port: 3306
-trade_db_database: koenbps1_trade
+trade_db_database: trade
 log_file: app.log
